@@ -39,3 +39,4 @@ rasterio
 geopandas
 opencv-python
 imgaug
+segmentation_models_pytorch
