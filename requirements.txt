@@ -33,3 +33,9 @@ scikit-learn    # used in some callbacks
 seaborn         # used in some callbacks
 jupyterlab      # better jupyter notebooks
 pudb            # debugger
+
+# --------- project related --------- #
+rasterio
+geopandas
+opencv-python
+imgaug
