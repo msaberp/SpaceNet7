@@ -1,0 +1,13 @@
+_target_: src.models.mnist_model.MNISTLitModel
+
+encoder_name: "resnet18"
+encoder_depth: 3
+encoder_weights: "imagenet"
+psp_out_channels: 64
+psp_dropout: 0.1
+in_channels: 3
+classes: 2
+activation: "sigmoid"
+
+lr: 0.001
+weight_decay: 0.0005
