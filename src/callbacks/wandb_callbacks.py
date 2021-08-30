@@ -150,6 +150,9 @@ class LogConfusionMatrix(Callback):
             preds = torch.cat(self.preds).cpu().numpy()
             targets = torch.cat(self.targets).cpu().numpy()
 
+            preds = preds.reshape(-1)
+            targets = targets.reshape(-1)
+
             confusion_matrix = metrics.confusion_matrix(y_true=targets, y_pred=preds)
 
             # set figure size
@@ -207,9 +210,14 @@ class LogF1PrecRecHeatmap(Callback):
 
             preds = torch.cat(self.preds).cpu().numpy()
             targets = torch.cat(self.targets).cpu().numpy()
-            f1 = f1_score(preds, targets, average=None)
-            r = recall_score(preds, targets, average=None)
-            p = precision_score(preds, targets, average=None)
+
+            preds_linear = preds.reshape(-1)
+            targets_linear = targets.reshape(-1)
+
+            f1 = f1_score(targets_linear, preds_linear, average=None)
+            r = recall_score(targets_linear, preds_linear, average=None)
+            p = precision_score(targets_linear, preds_linear, average=None)
+
             data = [f1, p, r]
 
             # set figure size
@@ -267,13 +275,28 @@ class LogImagePredictions(Callback):
             # run the batch through the network
             val_imgs = val_imgs.to(device=pl_module.device)
             logits = pl_module(val_imgs)
-            preds = torch.argmax(logits, axis=-1)
+            preds = torch.argmax(logits, axis=1)
+
+            class_labels = {
+                0: "bg",
+                1: "building",
+            }
 
             # log the images as wandb Image
             experiment.log(
                 {
                     f"Images/{experiment.name}": [
-                        wandb.Image(x, caption=f"Pred:{pred}, Label:{y}")
+                        wandb.Image(x, masks={
+                                "predictions": {
+                                    "mask_data": pred.detach().cpu().numpy(),
+                                    "class_labels": class_labels
+                                },
+                                "ground_truth": {
+                                    "mask_data": y.cpu().numpy(),
+                                    "class_labels": class_labels
+                                }
+                            }
+                        )
                         for x, pred, y in zip(
                             val_imgs[: self.num_samples],
                             preds[: self.num_samples],
