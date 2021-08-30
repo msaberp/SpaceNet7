@@ -2,16 +2,16 @@
 
 # specify here default training configuration
 defaults:
-  - trainer: default.yaml
-  - model: mnist_model.yaml
-  - datamodule: mnist_datamodule.yaml
-  - callbacks: default.yaml # set this to null if you don't want to use callbacks
-  - logger: null # set logger here or use command line (e.g. `python run.py logger=wandb`)
+  - trainer: default
+  - model: pspnet
+  - datamodule: sn7_datamodule
+  - callbacks: wandb  # set this to null if you don't want to use callbacks
+  - logger: wandb  # set logger here or use command line (e.g. `python run.py logger=wandb`)
 
   - experiment: null
   - hparams_search: null
 
-  - hydra: default.yaml
+  - hydra: default
 
   # enable color logging
   - override hydra/hydra_logging: colorlog
