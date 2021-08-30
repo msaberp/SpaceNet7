@@ -13,9 +13,6 @@ import torch
 
 def predict(cfg):
     img_path = input("Please enter the path to your image (absolute path): ")
-    model_type = int(input("Please choose your model: \n1. PSPNet with cross entropy\n2. PSPNet with weighted cross entropy\n Your choice: "))
-    assert model_type in [1, 2], f"The given model type is incorrect."
-
 
     assert os.path.isfile(img_path), f"No file can be found! {img_path}"
     transform = transforms.Compose(
@@ -41,8 +38,6 @@ def predict(cfg):
     model = hydra.utils.instantiate(cfg.model)
     model = model.load_from_checkpoint(
         os.path.join(os.path.dirname(__file__), "../assets/pspnet_ce_loss.ckpt") 
-        if model_type == 1 else
-        os.path.join(os.path.dirname(__file__), "../assets/pspnet_wce_loss.ckpt")
     )
     model.eval()
 
