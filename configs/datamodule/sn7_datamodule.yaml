@@ -1,4 +1,4 @@
-_target_: src.datamodules.sn7_datamodule.SpaceNet7Dataset
+_target_: src.datamodules.sn7_datamodule.SpaceNet7DataModule
 
 data_dir: ${data_dir} # data_dir is specified in config.yaml
 batch_size: 8
