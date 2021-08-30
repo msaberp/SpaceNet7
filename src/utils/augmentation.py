@@ -6,7 +6,7 @@ crop_size = 512
 def return_augmentation(mode: str):
     if mode == "train":
         return iaa.Sequential([
-            iaa.Resize((1.0, 4.0)),
+            iaa.Resize((1.0, 8.0)),
             iaa.CropToFixedSize(width=crop_size, height=crop_size),
             iaa.Rot90([1, 3]),
             iaa.Fliplr(0.5),
