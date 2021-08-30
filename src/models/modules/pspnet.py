@@ -13,7 +13,7 @@ class PSPNet(nn.Module):
             psp_out_channels=hparams["psp_out_channels"],
             psp_dropout=hparams["psp_dropout"],
             in_channels=hparams["in_channels"],
-            activation=hparams["activations"],
+            activation=hparams["activation"],
             classes=hparams["classes"],
         )
         
