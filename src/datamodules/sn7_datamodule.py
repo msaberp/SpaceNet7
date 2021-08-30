@@ -1,5 +1,6 @@
 from typing import Optional, Tuple, List
 import os
+import imgaug
 
 from pytorch_lightning import LightningDataModule
 from torch.utils.data import ConcatDataset, DataLoader, Dataset, random_split
@@ -47,13 +48,18 @@ class SpaceNet7DataModule(LightningDataModule):
         return 2
 
     def prepare_data(self):
-        if not os.path.isdir(os.path.join(self.data_dir, "masks")) or len(os.listdir(os.path.join(self.data_dir, "masks"))) != len(os.listdir(os.path.join(self.data_dir, "images"))):
+        images_dir = os.path.join(os.path.dirname(__file__), "../../data/images")
+        masks_dir = os.path.join(os.path.dirname(__file__), "../../data/masks")
+        
+        if not os.path.isdir(masks_dir) or len(os.listdir(masks_dir)) != len(os.listdir(images_dir)):
             create_masks()
         
-        images_dir = os.path.join(self.data_dir, "images")
-        labels_dir = os.path.join(self.data_dir, "masks")
         self.images_paths = sorted([os.path.join(images_dir, img_name) for img_name in os.listdir(images_dir)])
-        self.labels_paths = [os.path.join(labels_dir, find_label(os.path.basename(img_name))) for img_name in images_dir]
+        self.labels_paths = [os.path.splitext(os.path.join(masks_dir, os.path.basename(img_name)))[0] + '.png' for img_name in self.images_paths]
+        
+        for img_path, lbl_path in zip(self.images_paths, self.labels_paths):
+            assert os.path.isfile(img_path), f"the file {img_path} dose not exist."
+            assert os.path.isfile(lbl_path), f"the file {lbl_path} dose not exist."
 
     def setup(self, stage: Optional[str] = None):
         train_length = int(len(self.images_paths) * self.train_val_test_split[0])
