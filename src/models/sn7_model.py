@@ -7,10 +7,17 @@ from torchmetrics.classification.accuracy import Accuracy
 from src.models.modules.pspnet import PSPNet
 
 
-class MNISTLitModel(LightningModule):
+class SpaceNet7Model(LightningModule):
     def __init__(
         self,
-        backbone: str,
+        encoder_name: str = "resnet18",
+        encoder_depth: int = 3,
+        encoder_weights: str = "imagenet",
+        psp_out_channels: int = 64,
+        psp_dropout: float = 0.1,
+        in_channels: int = 3,
+        classes: int = 2,
+        activation: str =  "sigmoid",
         lr: float = 0.001,
         weight_decay: float = 0.0005,
     ):
