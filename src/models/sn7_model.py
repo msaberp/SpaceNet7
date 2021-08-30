@@ -27,7 +27,7 @@ class SpaceNet7Model(LightningModule):
         self.model = PSPNet(self.hparams)
 
         # loss function
-        self.criterion = torch.nn.CrossEntropyLoss(weight=torch.Tensor([0.01, 0.99]))
+        self.criterion = torch.nn.CrossEntropyLoss()
 
         self.train_accuracy = Accuracy()
         self.val_accuracy = Accuracy()
