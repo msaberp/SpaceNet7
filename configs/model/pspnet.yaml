@@ -1,4 +1,4 @@
-_target_: src.models.mnist_model.MNISTLitModel
+_target_: src.models.sn7_model.SpaceNet7Model
 
 encoder_name: "resnet18"
 encoder_depth: 3
@@ -7,7 +7,7 @@ psp_out_channels: 64
 psp_dropout: 0.1
 in_channels: 3
 classes: 2
-activation: "sigmoid"
+activation: "softmax"
 
 lr: 0.001
 weight_decay: 0.0005
