@@ -41,17 +41,18 @@ class SpaceNet7Dataset(Dataset):
         
         # reading image using rasterio
         image = rasterio.open(img_path).read()
-        alpha = image[3]
-        image = image[:3]
+        image = np.transpose(image, [1, 2, 0])
+        alpha = image[..., 3]
+        image = image[..., :3]
         image = cv.cvtColor(image, cv.COLOR_BGR2RGB)
         
-        # reading label using cv
-        label = cv.imread(lbl_path)
+        # reading label using opencv
+        label = cv.imread(lbl_path, cv.IMREAD_GRAYSCALE)
         
         # applying data augmentation
         image, label = self.augment_data(image, label)
         
         # normalization and converting into torch.Tensor
-        image = self.transform(image)
-        label = self.transform(label)
-        return image, label
+        image = self.transform(image.copy())
+        label = transforms.ToTensor()(label.copy())
+        return image, label.squeeze().long()
